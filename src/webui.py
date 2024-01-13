@@ -11,6 +11,7 @@ class Server(SimpleHTTPRequestHandler):
         self.handle_left_motor = handle_left_motor
         self.handle_right_motor = handle_right_motor
         self.finish_loop = finish_loop
+        self.protocol_version = "HTTP/1.1"
         super().__init__(*args, **kwargs)
 
     def log_request(self, code='-', size='-'):
