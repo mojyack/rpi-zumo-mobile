@@ -17,6 +17,34 @@ class Server(SimpleHTTPRequestHandler):
     def log_request(self, code='-', size='-'):
         pass
 
+    def send_snapshot(self, path):
+        try:
+            file = open(path, 'rb')
+        except OSError:
+            self.send_error(HTTPStatus.NOT_FOUND, "File not found")
+            return None
+
+        try:
+            fs = os.fstat(file.fileno())
+            self.send_response(HTTPStatus.OK)
+            self.send_header("Content-type", "image/jpeg")
+            self.send_header("Content-Length", str(fs[6]))
+            self.send_header("Cache-Control", "no-cache, no-store")
+            self.end_headers()
+            self.copyfile(file, self.wfile)
+        except:
+            print("failed to send snapshot")
+
+    def do_GET(self):
+        if 'snapshot.jpg' in self.path:
+            path = self.path
+            param = path.find('?')
+            if param != -1:
+                path = path[:param]
+            self.send_snapshot(os.getcwd() + path)
+        else:
+            super().do_GET()
+
     def do_POST(self):
         ctype = self.headers['content-type']
         clen = int(self.headers['content-length'])
