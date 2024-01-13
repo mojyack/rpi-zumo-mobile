@@ -1,5 +1,4 @@
 let touch_ids = {left: 0, right: 0};
-let monitor_updater = setInterval(update_monitor, 33);
 let frame_count = 1;
 
 function send_value(value) {
@@ -70,6 +69,18 @@ function init() {
         fit_canvas(document.getElementById("left"));
         fit_canvas(document.getElementById("right"));
     }
+
+    let monitor_update_interval = 33;
+
+    const monitor = document.getElementById("monitor_img");
+    monitor.onload = function() {
+        console.log("continue");
+        setTimeout(update_monitor, monitor_update_interval);
+    };
+    monitor.onerror = function() {
+        console.log("error");
+        setTimeout(update_monitor, monitor_update_interval);
+    };
 }
 
 document.addEventListener("DOMContentLoaded", init);
