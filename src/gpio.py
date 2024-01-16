@@ -1,14 +1,17 @@
 import gpiod
 from gpiod.line import Direction, Value
 
-class GPIOPin():
+
+class GPIOPin:
     def __init__(self, gpiochip, consumer_name, pin):
         self.pin = pin
         self.request = gpiod.request_lines(
             gpiochip,
             consumer=consumer_name,
             config={
-                pin: gpiod.LineSettings(direction=Direction.OUTPUT, output_value=Value.INACTIVE)
+                pin: gpiod.LineSettings(
+                    direction=Direction.OUTPUT, output_value=Value.INACTIVE
+                )
             },
         )
 

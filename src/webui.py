@@ -6,20 +6,23 @@ from http.server import SimpleHTTPRequestHandler
 from os.path import dirname, join
 from io import BytesIO
 
+
 class Server(SimpleHTTPRequestHandler):
-    def __init__(self, handle_left_motor, handle_right_motor, finish_loop, *args, **kwargs):
+    def __init__(
+        self, handle_left_motor, handle_right_motor, finish_loop, *args, **kwargs
+    ):
         self.handle_left_motor = handle_left_motor
         self.handle_right_motor = handle_right_motor
         self.finish_loop = finish_loop
         self.protocol_version = "HTTP/1.1"
         super().__init__(*args, **kwargs)
 
-    def log_request(self, code='-', size='-'):
+    def log_request(self, code="-", size="-"):
         pass
 
     def send_snapshot(self, path):
         try:
-            file = open(path, 'rb')
+            file = open(path, "rb")
         except OSError:
             self.send_error(HTTPStatus.NOT_FOUND, "File not found")
             return None
@@ -36,9 +39,10 @@ class Server(SimpleHTTPRequestHandler):
             print("failed to send snapshot")
 
     def do_GET(self):
-        if 'snapshot.jpg' in self.path:
+        print("GET: ", self.path)
+        if "snapshot.jpg" in self.path:
             path = self.path
-            param = path.find('?')
+            param = path.find("?")
             if param != -1:
                 path = path[:param]
             self.send_snapshot(os.getcwd() + path)
@@ -46,9 +50,9 @@ class Server(SimpleHTTPRequestHandler):
             super().do_GET()
 
     def do_POST(self):
-        ctype = self.headers['content-type']
-        clen = int(self.headers['content-length'])
-        text = self.rfile.read(clen).decode('utf-8')
+        ctype = self.headers["content-type"]
+        clen = int(self.headers["content-length"])
+        text = self.rfile.read(clen).decode("utf-8")
 
         print("POST:", text)
         match text[0]:
@@ -61,19 +65,25 @@ class Server(SimpleHTTPRequestHandler):
             case _:
                 print("unknown post")
 
-        self.send_response(200)
+        self.send_response(HTTPStatus.NO_CONTENT)
         self.end_headers()
+
 
 def start_server(handle_left_motor, handle_right_motor):
     finish_loop = [0]
-    server = HTTPServer(("0.0.0.0", 8000), functools.partial(Server, handle_left_motor, handle_right_motor, finish_loop))
+    server = HTTPServer(
+        ("0.0.0.0", 8000),
+        functools.partial(Server, handle_left_motor, handle_right_motor, finish_loop),
+    )
     try:
         while finish_loop[0] == 0:
             server.handle_request()
     except KeyboardInterrupt:
         pass
 
+
 if __name__ == "__main__":
+
     def handle(v):
         pass
 

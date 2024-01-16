@@ -2,7 +2,8 @@ import sys
 
 sysfs = "/sys/class/pwm/pwmchip0"
 
-class PWMDevice():
+
+class PWMDevice:
     def sysfs_write(file, value):
         open(f"{sysfs}/{file}", "w").write(str(value))
 
@@ -17,7 +18,9 @@ class PWMDevice():
         PWMDevice.sysfs_write(f"pwm{self.number}/enable", flag)
 
     def set_inversed(self, flag):
-        PWMDevice.sysfs_write(f"pwm{self.number}/polarity", "inversed" if flag else "normal")
+        PWMDevice.sysfs_write(
+            f"pwm{self.number}/polarity", "inversed" if flag else "normal"
+        )
 
     def set_period(self, period):
         PWMDevice.sysfs_write(f"pwm{self.number}/period", period)
