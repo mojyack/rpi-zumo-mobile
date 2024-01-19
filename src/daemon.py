@@ -34,6 +34,10 @@ class Motor:
 motor_l = Motor(config.left_motor_pwm, config.left_motor_direction)
 motor_r = Motor(config.right_motor_pwm, config.right_motor_direction)
 
+import camera
+
+cam = camera.Camera(config.tmpdir, config.camera_command)
+
 import webui
 
 
@@ -47,7 +51,9 @@ def handle_right_motor(value):
     motor_r.change_speed(value)
 
 
+cam.start()
 webui.start_server(handle_left_motor, handle_right_motor)
+cam.stop()
 
 del motor_l
 del motor_r
