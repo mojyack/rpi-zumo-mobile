@@ -1,7 +1,7 @@
 import os
 import functools
 from http import HTTPStatus
-from http.server import HTTPServer
+from http.server import ThreadingHTTPServer
 from http.server import SimpleHTTPRequestHandler
 from os.path import dirname, join
 from io import BytesIO
@@ -71,7 +71,7 @@ class Server(SimpleHTTPRequestHandler):
 
 def start_server(handle_left_motor, handle_right_motor):
     finish_loop = [0]
-    server = HTTPServer(
+    server = ThreadingHTTPServer(
         ("0.0.0.0", 8000),
         functools.partial(Server, handle_left_motor, handle_right_motor, finish_loop),
     )
