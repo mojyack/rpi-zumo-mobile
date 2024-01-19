@@ -98,7 +98,7 @@ function init() {
     const monitor_interval_apply = document.getElementById("monitor_interval_apply");
     function apply_monitor_interval() {
         const num = Number(monitor_interval_value.value);
-        if(num == NaN || num < 10 || num > 1000) {
+        if(num == NaN) {
             return;
         }
         monitor_update_interval = num;
