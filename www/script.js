@@ -59,7 +59,7 @@ function update_monitor() {
 
     const now = Date.now();
     if(now - last_update >= 1000) {
-        document.getElementById("statusline").textContent = "fps: " + (frame_count - last_frame).toString();
+        document.getElementById("fps").textContent = "fps: " + (frame_count - last_frame).toString();
         last_frame = frame_count;
         last_update = now;
     }
@@ -70,6 +70,8 @@ function fit_canvas(canvas) {
     canvas.setAttribute("height", canvas.clientHeight);
 }
 
+let monitor_update_interval = 33;
+
 function init() {
     init_canvas("left");
     init_canvas("right");
@@ -79,17 +81,39 @@ function init() {
         fit_canvas(document.getElementById("right"));
     }
 
-    let monitor_update_interval = 33;
-
+    // setup monitor
     const monitor = document.getElementById("monitor_img");
-    monitor.onload = function() {
-        console.log("continue");
-        setTimeout(update_monitor, monitor_update_interval);
+    function set_monitor_hook(monitor_update_interval) {
+        monitor.onload = function() {
+            console.log("continue");
+            setTimeout(update_monitor, monitor_update_interval);
+        };
+        monitor.onerror = function() {
+            console.log("error");
+            setTimeout(update_monitor, monitor_update_interval);
+        };
+    }
+
+    const monitor_interval_value = document.getElementById("monitor_interval_value");
+    const monitor_interval_apply = document.getElementById("monitor_interval_apply");
+    function apply_monitor_interval() {
+        const num = Number(monitor_interval_value.value);
+        if(num == NaN || num < 10 || num > 1000) {
+            return;
+        }
+        monitor_update_interval = num;
+        monitor_interval_apply.disabled = true;
+        set_monitor_hook(monitor_update_interval);
+    }
+    apply_monitor_interval();
+
+    monitor_interval_value.oninput = (event)=> {
+        console.log(monitor_update_interval, event.target.value);
+        const num = Number(event.target.value);
+        monitor_interval_apply.disabled = num == NaN && monitor_update_interval == num;
     };
-    monitor.onerror = function() {
-        console.log("error");
-        setTimeout(update_monitor, monitor_update_interval);
-    };
+    monitor_interval_value.onchange = apply_monitor_interval;
+    monitor_interval_apply.onclick = apply_monitor_interval;
 }
 
 document.addEventListener("DOMContentLoaded", init);

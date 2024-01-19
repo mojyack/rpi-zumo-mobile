@@ -41,3 +41,8 @@ body {
     width: 25%;
     background: black;
 }
+
+.statusline {
+    display: inline-block;
+    vertical-align: top;
+}
