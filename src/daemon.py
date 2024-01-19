@@ -25,6 +25,7 @@ class Motor:
         else:
             self.phase.set_active(False)
             pass
+        speed *= config.speed_limit
 
         self.enable.set_enabled(0)
         self.enable.set_duty(int(speed * Motor.pwm_period / 100))
