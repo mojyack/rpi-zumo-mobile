@@ -80,6 +80,7 @@ function init() {
         fit_canvas(document.getElementById("left"));
         fit_canvas(document.getElementById("right"));
     }
+    window.onresize()
 
     // setup monitor
     const monitor = document.getElementById("monitor_img");
