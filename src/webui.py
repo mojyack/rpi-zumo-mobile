@@ -3,8 +3,6 @@ import functools
 from http import HTTPStatus
 from http.server import ThreadingHTTPServer
 from http.server import SimpleHTTPRequestHandler
-from os.path import dirname, join
-from io import BytesIO
 
 
 class Server(SimpleHTTPRequestHandler):
