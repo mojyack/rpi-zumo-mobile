@@ -85,11 +85,9 @@ function init() {
     const monitor = document.getElementById("monitor_img");
     function set_monitor_hook(monitor_update_interval) {
         monitor.onload = function() {
-            console.log("continue");
             setTimeout(update_monitor, monitor_update_interval);
         };
         monitor.onerror = function() {
-            console.log("error");
             setTimeout(update_monitor, monitor_update_interval);
         };
     }
@@ -108,7 +106,6 @@ function init() {
     apply_monitor_interval();
 
     monitor_interval_value.oninput = (event)=> {
-        console.log(monitor_update_interval, event.target.value);
         const num = Number(event.target.value);
         monitor_interval_apply.disabled = num == NaN && monitor_update_interval == num;
     };
