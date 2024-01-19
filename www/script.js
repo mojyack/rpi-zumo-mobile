@@ -1,12 +1,11 @@
 let touch_ids = {left: 0, right: 0};
-let frame_count = 1;
 
 function send_value(value) {
     const xhr = new XMLHttpRequest();
     xhr.open("POST", "/index.html");
     xhr.setRequestHeader("Content-Type", "text/plain");
     xhr.send(value);
-    console.log(value);
+    // console.log(value);
 }
 
 const clamp = (n, min, max) => Math.min(Math.max(n, min), max)
@@ -49,11 +48,21 @@ function init_canvas(name) {
     canvas.addEventListener('touchmove', on_touch_move);
 }
 
+let frame_count = 1;
+let last_frame = 1;
+let last_update = Date.now();
 function update_monitor() {
     const monitor = document.getElementById("monitor_img");
     const src = monitor.src.substring(0, monitor.src.indexOf("?")) + "?_=" + frame_count;
     monitor.src = src;
     frame_count += 1;
+
+    const now = Date.now();
+    if(now - last_update >= 1000) {
+        document.getElementById("statusline").textContent = "fps: " + (frame_count - last_frame).toString();
+        last_frame = frame_count;
+        last_update = now;
+    }
 }
 
 function fit_canvas(canvas) {
