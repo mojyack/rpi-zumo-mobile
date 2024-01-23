@@ -18,14 +18,17 @@ class Motor:
         self.enable.set_period(Motor.pwm_period)
         self.enable.set_enabled(1)
 
+    # -1.0 <= speed <= 1.0
     def change_speed(self, speed):
         if speed < 0:
             self.phase.set_active(True)
             speed = -speed
         else:
             self.phase.set_active(False)
-            pass
-        speed *= config.speed_limit
+        # 0.0 <= speed <= 1.0
+
+        speed = speed * (config.max_speed - config.min_speed) + config.min_speed
+        # min_speed <= speed <= max_speed
 
         self.enable.set_enabled(0)
         self.enable.set_duty(int(speed * Motor.pwm_period / 100))
