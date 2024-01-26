@@ -114,7 +114,7 @@ class AutoPilot:
             self.handle_right_motor(0)
             return
         
-        base_speed = remaining_dist / config.algo_max_speed_distance * 100
+        base_speed = remaining_dist / config.algo_max_speed_distance * config.algo_straight_ratio
         base_speed = min(base_speed, 100)
 
         if config.debug_autopilot:
@@ -122,8 +122,8 @@ class AutoPilot:
         l = +1 * gap * config.algo_curve_ratio + base_speed
         r = -1 * gap * config.algo_curve_ratio + base_speed
 
-        self.handle_left_motor(min(l, 100))
-        self.handle_right_motor(min(r, 100))
+        self.handle_left_motor(max(-100,min(l, 100)))
+        self.handle_right_motor(max(-100,min(r, 100)))
 
     def start(self):
         self.notifier.start()
