@@ -16,3 +16,11 @@ camera_focal_length = 28 # mm
 camera_sensor_height = 3.72 # mm
 qrcode_height = 120 # mm
 enable_scanned_channel = True
+algo_desired_distance = 3000
+algo_max_speed_distance = 5000
+algo_curve_ratio = 10
+
+
+debug_daemon = True
+debug_webui = False
+debug_autopilot = True

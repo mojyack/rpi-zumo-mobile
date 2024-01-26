@@ -1,5 +1,7 @@
 import os
 import math
+import time
+import functools
 
 import pyinotify
 import cv2
@@ -9,7 +11,6 @@ import config
 
 src_filename = "plain-snapshot.jpg"
 dst_filename = "scanned-snapshot.jpg"
-debug = False
 
 
 class Detector:
@@ -34,7 +35,7 @@ class Detector:
             return (None, None)
 
         for i, point in enumerate(points):
-            if decoded_info[i] != "Zumo Robot":
+            if len(points) != 1 and decoded_info[i] != "Zumo Robot":
                 continue
 
             point_list = point.tolist()
@@ -77,23 +78,79 @@ class Detector:
 
 
 class Handler(pyinotify.ProcessEvent):
-    def __init__(self):
+    def __init__(self, handle_qr_info):
         self.detector = Detector()
+        self.handle_qr_info = handle_qr_info
 
     def process_IN_MOVED_TO(self, event):
         if event.pathname == config.tmpdir + "/" + src_filename:
-            dist, gap = self.detector.get_qr_info(
-                config.tmpdir + "/" + src_filename
-            )
-            if debug:
-                print(dist, gap)
+            dist, gap = self.detector.get_qr_info(config.tmpdir + "/" + src_filename)
+            self.handle_qr_info(dist, gap)
+
+
+class AutoPilot:
+    def __init__(self, handle_left_motor, handle_right_motor):
+        self.handle_left_motor = handle_left_motor
+        self.handle_right_motor = handle_right_motor
+
+        wm = pyinotify.WatchManager()
+        wm.add_watch(config.tmpdir, pyinotify.IN_MOVED_TO)
+        self.notifier = pyinotify.ThreadedNotifier(
+            wm, Handler(functools.partial(AutoPilot.handle_qr_info, self))
+        )
+
+    def handle_qr_info(self, dist, gap):
+        if config.debug_autopilot:
+            print("dist:", dist, "gap:", gap)
+
+        if dist == None or gap == None:
+            self.handle_left_motor(0)
+            self.handle_right_motor(0)
+            return
+
+        remaining_dist = dist - config.algo_desired_distance
+        if remaining_dist < 0:
+            self.handle_left_motor(0)
+            self.handle_right_motor(0)
+            return
+        
+        base_speed = remaining_dist / config.algo_max_speed_distance * 100
+        base_speed = min(base_speed, 100)
+
+        if config.debug_autopilot:
+            print("rem", remaining_dist, "base", base_speed)
+        l = +1 * gap * config.algo_curve_ratio + base_speed
+        r = -1 * gap * config.algo_curve_ratio + base_speed
+
+        self.handle_left_motor(min(l, 100))
+        self.handle_right_motor(min(r, 100))
+
+    def start(self):
+        self.notifier.start()
+        if config.debug_autopilot:
+            print("autopilot started")
+
+    def stop(self):
+        self.notifier.stop()
+        if config.debug_autopilot:
+            print("autopilot stopped")
 
 
 def main():
-    wm = pyinotify.WatchManager()
-    wdd = wm.add_watch(config.tmpdir, pyinotify.IN_MOVED_TO)
-    # pyinotify.ThreadedNotifier(wm, Handler()).start()
-    pyinotify.Notifier(wm, Handler()).loop()
+    def handle_left_motor(value):
+        print("L:", value)
+
+    def handle_right_motor(value):
+        print("R:", value)
+
+    ap = AutoPilot(handle_left_motor, handle_right_motor)
+    ap.start()
+    try:
+        while True:
+            time.sleep(100)
+    except KeyboardInterrupt:
+        pass
+    ap.stop()
 
 
 if __name__ == "__main__":

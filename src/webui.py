@@ -4,6 +4,8 @@ from http import HTTPStatus
 from http.server import ThreadingHTTPServer
 from http.server import SimpleHTTPRequestHandler
 
+import config
+
 
 class Server(SimpleHTTPRequestHandler):
     def __init__(
@@ -37,7 +39,8 @@ class Server(SimpleHTTPRequestHandler):
             print("failed to send snapshot")
 
     def do_GET(self):
-        print("GET: ", self.path)
+        if config.debug_webui:
+            print("GET: ", self.path)
         if "snapshot.jpg" in self.path:
             path = self.path
             param = path.find("?")
@@ -52,7 +55,8 @@ class Server(SimpleHTTPRequestHandler):
         clen = int(self.headers["content-length"])
         text = self.rfile.read(clen).decode("utf-8")
 
-        print("POST:", text)
+        if config.debug_webui:
+            print("POST:", text)
         match text[0]:
             case "L":
                 self.handle_left_motor(float(text[1:]))

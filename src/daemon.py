@@ -52,15 +52,29 @@ def handle_left_motor(value):
     global motor_l
     motor_l.change_speed(value)
 
+    if config.debug_daemon:
+        print("L:", value)
+
 
 def handle_right_motor(value):
     global motor_r
     motor_r.change_speed(value)
 
+    if config.debug_daemon:
+        print("R:", value)
+
+
+import autopilot
+
+ap = autopilot.AutoPilot(handle_left_motor, handle_right_motor)
+
+ap.start()
 
 cam.start()
 webui.start_server(handle_left_motor, handle_right_motor)
 cam.stop()
+
+ap.stop()
 
 del motor_l
 del motor_r
