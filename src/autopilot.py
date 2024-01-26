@@ -84,7 +84,7 @@ class Handler(pyinotify.ProcessEvent):
         if event.pathname == config.tmpdir + "/" + src_filename:
             dist, gap = self.detector.get_qr_info(
                 config.tmpdir + "/" + src_filename
-            )  # dist: ZumoとQRコード間の距離, gap: QRコードの重心が画像中心からどれだけ離れているか
+            )
             if debug:
                 print(dist, gap)
 
