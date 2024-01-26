@@ -20,10 +20,10 @@ class Motor:
 
     # -100 <= speed <= 100
     def change_speed(self, speed):
-        if speed < 0:
+        if speed > 0:
             self.phase.set_active(True)
-            speed = -speed
         else:
+            speed = -speed
             self.phase.set_active(False)
         # 0 <= speed <= 100
 

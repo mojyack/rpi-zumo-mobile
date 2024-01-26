@@ -18,7 +18,7 @@ function down(elm, ev) {
             continue;
         }
         const y = clamp(t.pageY, 0, elm.height);
-        const v = (y - elm.height * 0.5) / elm.height * 2 * 100;
+        const v = (y - elm.height * 0.5) / elm.height * 2 * -100;
         send_value(elm.id[0].toUpperCase() + v.toString());
         ctx.clearRect(0, 0, elm.width, elm.height);
         ctx.fillStyle = "#A0A0A0"
