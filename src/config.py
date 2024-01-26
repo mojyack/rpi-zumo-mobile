@@ -3,7 +3,7 @@ left_motor_pwm = 1
 right_motor_pwm = 0
 left_motor_direction = 6
 right_motor_direction = 5
-min_speed = 0.1
+min_speed = 0.15
 max_speed = 0.7
 
 # camera
