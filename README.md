@@ -1,8 +1,3 @@
-# setup
-```
-pip3 install -t lib RPi.GPIO
-```
-
 # run
 ## server
 ```
