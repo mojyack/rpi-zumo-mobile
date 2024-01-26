@@ -32,7 +32,6 @@ class Motor:
 
         speed = speed * (config.max_speed - config.min_speed) + config.min_speed
         # min_speed <= speed <= max_speed
-        print("SPEED", speed)
 
         self.enable.set_enabled(0)
         self.enable.set_duty(int(speed * Motor.pwm_period))
