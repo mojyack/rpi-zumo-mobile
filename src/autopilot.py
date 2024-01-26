@@ -52,7 +52,6 @@ class Detector:
             # distance in mm
             dist = config.qrcode_height * config.camera_focal_length / height_mm
 
-            
             qrcode_center = np.sum(point, axis=0) / 4
             center_gap_pixel = float(qrcode_center[0]) - window_center
             center_gap = center_gap_pixel / (window_width / 2)
