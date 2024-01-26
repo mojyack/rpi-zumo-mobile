@@ -115,13 +115,18 @@ function init() {
     monitor_interval_value.onchange = apply_monitor_interval;
     monitor_interval_apply.onclick = apply_monitor_interval;
 
-    const monitor_channel_plain = document.getElementById("monitor_channel_plain");
-    const monitor_channel_scanned = document.getElementById("monitor_channel_scanned");
-    monitor_channel_plain.onchange = (event)=> {
+    document.getElementById("monitor_channel_plain").onchange = (event)=> {
         current_monitor_channel = 0;
     }
-    monitor_channel_scanned.onchange = (event)=> {
+    document.getElementById("monitor_channel_scanned").onchange = (event)=> {
         current_monitor_channel = 1;
+    }
+
+    document.getElementById("autopilot_on").onchange = (event)=> {
+        send_value("A1");
+    }
+    document.getElementById("autopilot_off").onchange = (event)=> {
+        send_value("A0");
     }
 }
 

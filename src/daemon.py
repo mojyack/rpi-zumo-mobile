@@ -71,13 +71,26 @@ import autopilot
 
 ap = autopilot.AutoPilot(handle_left_motor, handle_right_motor)
 
-ap.start()
+autopilot_running = False
+
+
+def handle_autopilot_switch(value):
+    global autopilot_running
+
+    if value and not autopilot_running:
+        ap.start()
+        autopilot_running = True
+    elif not value and autopilot_running:
+        ap.stop()
+        autopilot_running = False
+
 
 cam.start()
-webui.start_server(handle_left_motor, handle_right_motor)
+webui.start_server(handle_left_motor, handle_right_motor, handle_autopilot_switch)
 cam.stop()
 
-ap.stop()
+if autopilot_running:
+    ap.stop()
 
 del motor_l
 del motor_r

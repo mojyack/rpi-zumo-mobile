@@ -92,7 +92,9 @@ class AutoPilot:
     def __init__(self, handle_left_motor, handle_right_motor):
         self.handle_left_motor = handle_left_motor
         self.handle_right_motor = handle_right_motor
+        self.reset_notifier()
 
+    def reset_notifier(self):
         wm = pyinotify.WatchManager()
         wm.add_watch(config.tmpdir, pyinotify.IN_MOVED_TO)
         self.notifier = pyinotify.ThreadedNotifier(
@@ -132,6 +134,7 @@ class AutoPilot:
 
     def stop(self):
         self.notifier.stop()
+        self.reset_notifier()
         if config.debug_autopilot:
             print("autopilot stopped")
 

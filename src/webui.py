@@ -9,10 +9,11 @@ import config
 
 class Server(SimpleHTTPRequestHandler):
     def __init__(
-        self, handle_left_motor, handle_right_motor, finish_loop, *args, **kwargs
+        self, handle_left_motor, handle_right_motor, handle_autopilot_switch, finish_loop, *args, **kwargs
     ):
         self.handle_left_motor = handle_left_motor
         self.handle_right_motor = handle_right_motor
+        self.handle_autopilot_switch = handle_autopilot_switch
         self.finish_loop = finish_loop
         self.protocol_version = "HTTP/1.1"
         super().__init__(*args, **kwargs)
@@ -64,6 +65,8 @@ class Server(SimpleHTTPRequestHandler):
                 self.handle_right_motor(float(text[1:]))
             case "Q":
                 self.finish_loop[0] = 1
+            case "A":
+                self.handle_autopilot_switch(text[1] == "1")
             case _:
                 print("unknown post")
 
@@ -71,11 +74,11 @@ class Server(SimpleHTTPRequestHandler):
         self.end_headers()
 
 
-def start_server(handle_left_motor, handle_right_motor):
+def start_server(handle_left_motor, handle_right_motor, handle_autopilot_switch):
     finish_loop = [0]
     server = ThreadingHTTPServer(
         ("0.0.0.0", 8000),
-        functools.partial(Server, handle_left_motor, handle_right_motor, finish_loop),
+        functools.partial(Server, handle_left_motor, handle_right_motor, handle_autopilot_switch, finish_loop),
     )
     try:
         while finish_loop[0] == 0:
@@ -89,4 +92,4 @@ if __name__ == "__main__":
     def handle(v):
         pass
 
-    start_server(handle, handle)
+    start_server(handle, handle, handle)
