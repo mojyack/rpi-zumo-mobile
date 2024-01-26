@@ -64,6 +64,9 @@ def handle_right_motor(value):
         print("R:", value)
 
 
+handle_left_motor(0)
+handle_right_motor(0)
+
 import autopilot
 
 ap = autopilot.AutoPilot(handle_left_motor, handle_right_motor)
