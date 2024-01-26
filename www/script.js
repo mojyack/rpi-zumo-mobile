@@ -51,9 +51,11 @@ function init_canvas(name) {
 let frame_count = 1;
 let last_frame = 1;
 let last_update = Date.now();
+const monitor_channels = ["plain", "scanned"];
+let current_monitor_channel = 0;
 function update_monitor() {
     const monitor = document.getElementById("monitor_img");
-    const src = monitor.src.substring(0, monitor.src.indexOf("?")) + "?_=" + frame_count;
+    const src = monitor.src.substring(0, monitor.src.lastIndexOf("/")) + "/" + monitor_channels[current_monitor_channel] + "-snapshot.jpg?_=" + frame_count;
     monitor.src = src;
     frame_count += 1;
 
@@ -112,6 +114,15 @@ function init() {
     };
     monitor_interval_value.onchange = apply_monitor_interval;
     monitor_interval_apply.onclick = apply_monitor_interval;
+
+    const monitor_channel_plain = document.getElementById("monitor_channel_plain");
+    const monitor_channel_scanned = document.getElementById("monitor_channel_scanned");
+    monitor_channel_plain.onchange = (event)=> {
+        current_monitor_channel = 0;
+    }
+    monitor_channel_scanned.onchange = (event)=> {
+        current_monitor_channel = 1;
+    }
 }
 
 document.addEventListener("DOMContentLoaded", init);

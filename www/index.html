@@ -9,7 +9,7 @@
     <div id="container">
         <canvas id="left">LEFT</canvas> 
         <div id="monitor">
-            <img src="snapshot.jpg?_=0" id="monitor_img"></img>
+            <img src="plain-snapshot.jpg?_=0" id="monitor_img"></img>
         </div>
         <canvas id="right">RIGHT</canvas> 
     </div>
@@ -19,6 +19,10 @@
         <div id="fps" class="statusline">
             fps: 0
         </div>
+        <input id="monitor_channel_plain" type="radio" name="monitor_channel_switch" value="plain" class="statusline" checked>
+        <label>plain</label>
+        <input id="monitor_channel_scanned" type="radio" name="monitor_channel_switch" value="scanned" class="statusline">
+        <label>scanned</label>
     </div>
 </body>
 </html>
