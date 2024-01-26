@@ -15,10 +15,11 @@ camera_command = "gst-launch-1.0 v4l2src ! 'image/jpeg,width=800,height=600,fram
 camera_focal_length = 28 # mm
 camera_sensor_height = 3.72 # mm
 qrcode_height = 120 # mm
-enable_scanned_channel = True
-algo_desired_distance = 3000
-algo_max_speed_distance = 5000
-algo_curve_ratio = 10
+enable_scanned_channel = False
+algo_desired_distance = 1000
+algo_max_speed_distance = 3000
+algo_straight_ratio = 40
+algo_curve_ratio = 30
 
 
 debug_daemon = True
